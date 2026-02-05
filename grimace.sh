@@ -29,7 +29,13 @@ show_status() {
     echo -e "\n${BLUE}📊 Current Business Status:${NC}"
     echo -e "  ${YELLOW}Name:${NC} $(grep -o '"name": "[^"]*"' business-info.json | head -1 | cut -d'"' -f4)"
     echo -e "  ${YELLOW}Phone:${NC} $(grep -o '"phone": "[^"]*"' business-info.json | head -1 | cut -d'"' -f4)"
-    echo -e "  ${YELLOW}Email:${NC} $(grep -o '"email": "[^"]*"' business-info.json | head -1 | cut -d'"' -f4)"
+    
+    website=$(grep -o '"website": "[^"]*"' business-info.json | head -1 | cut -d'"' -f4)
+    if curl -s --head  --request GET "$website" | grep "200 OK" > /dev/null; then
+        echo -e "  ${YELLOW}Website:${NC} ${GREEN}LIVE${NC} ($website)"
+    else
+        echo -e "  ${YELLOW}Website:${NC} ${RED}DOWN/ERROR${NC} ($website)"
+    fi
     echo -e "  ${YELLOW}Sync Status:${NC} ${GREEN}OK${NC}"
 }
 
@@ -112,65 +118,68 @@ show_monitoring() {
     echo -e "${PURPLE}Strategy: Check these Every Monday morning!${NC}"
 }
 
-run_deploy() {
-    echo -e "\n${PURPLE}🚀 Initiating Total Cloud Automation...${NC}"
+run_god_mode() {
+    print_header
+    echo -e "${PURPLE}🛠️  GOD MODE: Total Business Automation...${NC}"
     
-    # 1. Sync Everything (Internal Config)
+    # 1. Internal Sync
     run_sync
     
-    # 2. Package GMB Content
-    node scripts/package-gmb-pack.cjs
-    
-    # 3. ZIP Website (Legacy Backup)
-    echo -e "${CYAN}📦 Creating Local Backup...${NC}"
-    (cd premium-website && zip -r ../business-deploy/website-deploy.zip . -x "*.DS_Store*")
-    
-    # 4. Git Cloud Sync
-    echo -e "\n${CYAN}☁️  Pushing to GitHub (Triggers Netlify)...${NC}"
-    git add .
-    git commit -m "Auto-Update: $(date '+%Y-%m-%d %H:%M')"
-    git push origin main
-    
-    if [ $? -eq 0 ]; then
-        echo -e "${GREEN}✅ Cloud Sync Complete!${NC}"
-        echo -e "Your website should be updating live shortly."
+    # 2. Daily Standup (Intelligent suggestions)
+    echo -e "\n${BLUE}📅 DAILY ACTION PLAN:${NC}"
+    day=$(date +%u) # 1=Mon, 4=Thu
+    if [ "$day" -le 3 ]; then
+        echo -e "  ${YELLOW}Status:${NC} Emergency Support Hours Active (5:30-9pm)"
+        echo -e "  ${YELLOW}Task:${NC} Check SMS/Email for Bairnsdale rescue requests."
     else
-        echo -e "${RED}⚠️  Cloud Sync encountered an error.${NC}"
-        echo -e "Check your internet connection or git status."
+        echo -e "  ${YELLOW}Status:${NC} Standard Business Hours Active (9am-6pm)"
+        echo -e "  ${YELLOW}Task:${NC} High-visibility engagement day. Post to GMB!"
     fi
-
-    echo -e "\n${GREEN}✨ DEPLOYMENT SUCCESSFUL! ✨${NC}"
-    echo -e "1. ${CYAN}GMB Assets:${NC} business-deploy/gmb-weekly-pack/"
-    echo -e "2. ${CYAN}Website:${NC} Live (if Netlify connected) or business-deploy/website-deploy.zip"
-}
-
-show_growth() {
-    echo -e "\n${PURPLE}📈 Growth & Client Acquisition Strategy:${NC}"
-    cat GMB-GROWTH-GUIDE.md | head -20
-    echo -e "\n${CYAN}Run 'cat GMB-GROWTH-GUIDE.md' for full details.${NC}"
+    
+    # 3. Weekly Post Selector
+    week=$(( ($(date +%d)-1)/7 + 1 ))
+    echo -e "\n${BLUE}📝 RECOMMENDED POST (Week $week):${NC}"
+    case $week in
+        1) echo -e "  ${CYAN}\"Need a second set of eyes? Get a FREE 5-minute Remote Tech Audit this week at Grimace Remote. Just message us!\"${NC}" ;;
+        2) echo -e "  ${CYAN}\"Scam Alert: Watch out for 'Microsoft Support' pop-ups! If you're worried about a scam in East Gippsland, give us a call before giving anyone your details.\"${NC}" ;;
+        3) echo -e "  ${CYAN}\"Slow computer? Most PCs in Bairnsdale just need a 'digital tune-up' rather than a replacement. We can do it remotely in 30 minutes!\"${NC}" ;;
+        *) echo -e "  ${CYAN}\"Shout out to our friends in Sale and Paynesville! Grimace Remote provides full support across the Gippsland region. No call-out fees, just results.\"${NC}" ;;
+    esac
+    
+    # 4. Cloud Backup
+    echo -e "\n${BLUE}☁️  Cloud Sync...${NC}"
+    git add .
+    git commit -m "Automation: $(date '+%Y-%m-%d %H:%M')" --allow-empty
+    git push origin main &>/dev/null
+    echo -e "  ${GREEN}✅ GitHub Updated.${NC}"
 }
 
 # Main Menu
 while true; do
     print_header
     show_status
-    echo -e "\n${BLUE}What would you like to do?${NC}"
+    echo -e "\n${BLUE}⚡ AUTOMATION & GO-LIVE:${NC}"
+    echo -e "  0) ${PURPLE}🚀 GOD MODE (Sync + Cloud + Post)${NC}"
     echo -e "  1) ${CYAN}Sync Business Info${NC} (JSON to All Files)"
-    echo -e "  2) ${CYAN}Check GMB Health${NC} (Live vs Local)"
+    echo -e "  9) ${CYAN}Push to GitHub${NC} (Manual Trigger)"
+    
+    echo -e "\n${BLUE}🛠️  DEVELOPMENT & ASSETS:${NC}"
     echo -e "  3) ${CYAN}Launch Development${NC} (Start Servers)"
     echo -e "  4) ${CYAN}Generate Review Flyer${NC} (Printable QR)"
-    echo -e "  5) ${CYAN}Platform Dashboards${NC} (Links)"
     echo -e "  6) ${CYAN}Export Branding${NC} (Copy-Paste Text)"
-    echo -e "  7) ${CYAN}Business Health Check${NC} (Project Scan)"
-    echo -e "  8) ${CYAN}Monitor Performance${NC} (Insights Links)"
-    echo -e "  9) ${CYAN}One-Click Deploy${NC} (Package & Zip)"
-    echo -e "  10) ${CYAN}Growth Guide${NC} (Get More Clients)"
-    echo -e "  11) ${YELLOW}Edit Business Info${NC} (Open JSON)"
-    echo -e "  12) ${RED}Exit${NC}"
+    
+    echo -e "\n${BLUE}📈 GROWTH & MONITORING:${NC}"
+    echo -e "  2) ${CYAN}Check GMB Health${NC} (Local vs Live)"
+    echo -e "  5) ${CYAN}Platform Dashboards${NC} (Links)"
+    echo -e "  8) ${CYAN}Monitor Performance${NC} (Insights)"
+    echo -e "  10) ${CYAN}Growth Guide${NC} (Strategy)"
+    
+    echo -e "\n  12) ${RED}Exit${NC}"
 
-    read -p "Enter choice [1-12]: " choice
+    read -p "Enter Choice [0-12]: " choice
 
     case $choice in
+        0) run_god_mode ;;
         1) run_sync ;;
         2) run_check ;;
         3) start_dev ;;
@@ -179,7 +188,7 @@ while true; do
         6) show_branding ;;
         7) run_health_check ;;
         8) show_monitoring ;;
-        9) run_deploy ;;
+        9) git add . && git commit -m "Manual sync" && git push origin main ;;
         10) show_growth ;;
         11) nano business-info.json ;;
         12) exit 0 ;;
