@@ -1,0 +1,33 @@
+{
+    "name": "Grimace Remote",
+    "categories": {
+        "primary": "IT support service",
+        "additional": [
+            "Website designer"
+        ]
+    },
+    "business_type": "Service area business (no storefront)",
+    "service_area": "East Gippsland (include Bairnsdale)",
+    "phone": "0407464371",
+    "website": "https://grimaceremote.com.au",
+    "pricing_model": "AUD $25 per 15 minutes",
+    "hours": {
+        "standard": "Thu–Sat: 9:00 AM–6:00 PM",
+        "emergency": "Mon–Wed 5:30 PM–9:00 PM"
+    },
+    "description": "Grimace Remote provides fast, friendly remote IT support and website development for businesses and residents across East Gippsland. We fix slow computers, Wi‑Fi and email problems, software installs, malware cleanup, backups, and Microsoft 365 or Google Workspace setup. We also build, update, and maintain small‑business websites and landing pages. 100% remote, no storefront. Regular hours Thu–Sat 9am–6pm with emergency support Mon–Wed 5:30–9pm. Transparent pricing from AUD $25 per 15 minutes. Call or visit our website to get help.",
+    "services": [
+        "Remote IT support",
+        "Computer troubleshooting (Windows/Mac)",
+        "Wi‑Fi and network setup (remote guidance)",
+        "Email setup and troubleshooting",
+        "Microsoft 365 setup and support",
+        "Google Workspace setup and support",
+        "Malware removal and security cleanup",
+        "Data backup and recovery setup",
+        "Software installation and updates",
+        "Website design and development",
+        "Website maintenance and updates",
+        "Domain and hosting setup"
+    ]
+}

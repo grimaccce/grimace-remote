@@ -1,0 +1,30 @@
+# Strict Ignore
+*
+!*/
+!.gitignore
+!business-info.json
+!grimace.sh
+!GMB-SUBMISSION.txt
+!AUTO-DEPLOY-SETUP.md
+!GMB-GROWTH-GUIDE.md
+!GMB-POST-CALENDAR.md
+!GMB-PERFECTION-BANK.md
+!REVIEW-REPLY-TEMPLATES.md
+!MAINTENANCE-CHECKLIST.md
+!MESSAGING-SETUP-GUIDE.md
+!PLATFORM-EXPANSION-GUIDE.md
+!scripts/
+!scripts/*.cjs
+!premium-website/
+!premium-website/**
+
+# Patterns
+node_modules/
+dist/
+build/
+*.zip
+*.dmg
+*.apk
+*.log
+*.env
+.DS_Store
